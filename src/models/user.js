@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const Task = require("./task");
 
 const userSchema = new mongoose.Schema(
   {
@@ -75,13 +74,13 @@ userSchema.methods.toJSON = function () {
   delete userObject.password;
   delete userObject.tokens;
   delete userObject.avatar;
-  
+
   return userObject;
 };
 
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
-  const token = jwt.sign({ _id: user._id.toString() },process.env.JWT_SECRET, {
+  const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET, {
     expiresIn: "7d",
   });
   user.tokens = user.tokens.concat({ token });
@@ -110,11 +109,11 @@ userSchema.pre("save", async function (next) {
   next();
 });
 // Delete User task if user is delete
-userSchema.pre("remove", async function (next) {
-  const user = this;
-  await Task.deleteMany({ owner: user._id });
-  next();
-});
+// userSchema.pre("remove", async function (next) {
+//   const user = this;
+
+//   next();
+// });
 const User = mongoose.model("Users", userSchema);
 
 module.exports = User;
