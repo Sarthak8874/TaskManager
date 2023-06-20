@@ -77,7 +77,6 @@ router.patch("/users/me", auth, async (req, res) => {
 
 router.delete("/users/me", auth, async (req, res) => {
   try {
-    console.log(req.user._id);
     await User.findByIdAndRemove(req.user._id);
     await Task.deleteMany({ owner: req.user._id });
     res.send(req.user);
