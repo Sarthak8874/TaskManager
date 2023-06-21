@@ -63,7 +63,8 @@ router.get("/task/:id", auth, async (req, res) => {
 });
 
 router.patch("/task/:id", auth, async (req, res) => {
-  const updates = Object.keys(req.body);
+  let updates = Object.keys(req.body);
+  updates = updates.filter((key) => key !== "token");
   const allowedUpdates = ["description", "completed"];
   const isValidUpdates = updates.every((update) =>
     allowedUpdates.includes(update)
@@ -71,15 +72,15 @@ router.patch("/task/:id", auth, async (req, res) => {
   if (!isValidUpdates) {
     return res.status(400).send({ error: "Invalid Updates!!" });
   }
-
   try {
+    const taskid = req.originalUrl.replace("/task/", "");
     const task = await Task.findOne({
-      _id: req.params.id,
+      _id: taskid,
       owner: req.user._id,
     });
-    // const task = await Task.findById(req.params.id);
     updates.forEach((update) => (task[update] = req.body[update]));
     await task.save();
+    console.log("save");
     if (!task) {
       return res.status(404).send();
     }
