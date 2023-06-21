@@ -58,8 +58,9 @@ router.get("/users/me", auth, async (req, res) => {
 });
 
 router.patch("/users/me", auth, async (req, res) => {
-  const updates = Object.keys(req.body);
-  const allowedUpdates = ["name", "email", "password", "email"];
+  let updates = Object.keys(req.body);
+  updates = updates.filter((key)=>key!== "token")
+  const allowedUpdates = ["name", "email", "password"];
   const isVaildOperation = updates.every((update) =>
     allowedUpdates.includes(update)
   );
@@ -69,7 +70,7 @@ router.patch("/users/me", auth, async (req, res) => {
   try {
     updates.forEach((update) => (req.user[update] = req.body[update]));
     await req.user.save();
-    res.status(200).send(req.user);
+    res.status(200).send({user:req.user,token:req.token});
   } catch (e) {
     res.status(400).send(e);
   }
