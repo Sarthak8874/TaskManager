@@ -5,7 +5,7 @@
 /config
 /.pnp
 .pnp.js
-
+/userimage
 # testing
 /coverage
 /tests
