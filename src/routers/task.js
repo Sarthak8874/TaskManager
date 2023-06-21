@@ -84,7 +84,7 @@ router.patch("/task/:id", auth, async (req, res) => {
     if (!task) {
       return res.status(404).send();
     }
-    res.status(200).send(task);
+    res.status(200).send({task});
   } catch (e) {
     res.status(500).send(e);
   }
