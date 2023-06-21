@@ -92,14 +92,12 @@ router.patch("/task/:id", auth, async (req, res) => {
 
 router.delete("/task/:id", auth, async (req, res) => {
   try {
-    const task = await Task.findOneAndDelete({
-      _id: req.params.id,
+    const taskid = req.params.id;
+    await Task.findOneAndDelete({
+      _id: taskid,
       owner: req.user._id,
     });
-    if (!task) {
-      return res.status(404).send({ error: "TaskId Does not Exist!!" });
-    }
-    res.status(200).send(task);
+    res.status(200).send();
   } catch (e) {
     res.status(500).send(e);
   }
