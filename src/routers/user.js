@@ -120,7 +120,7 @@ router.post(
 router.delete("/users/me/avatar", auth, async (req, res) => {
   req.user.avatar = undefined;
   await req.user.save();
-  res.send();
+  res.send({ user: req.user, token: req.query.token });
 });
 
 // router.get("/users/:id/avatar", async (req, res) => {
